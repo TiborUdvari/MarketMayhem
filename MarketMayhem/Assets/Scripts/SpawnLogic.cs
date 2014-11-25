@@ -49,10 +49,34 @@ public class SpawnLogic : MonoBehaviour {
 		personClone = Instantiate (person, initPosition, Quaternion.identity) as GameObject;
 		PersonController personController = personClone.GetComponent<PersonController>();
 		personController.Direction = side ? 1.0f : -1.0f;
-		personController.SpeedCategory = SpeedCategory.FAST;
+
+
+		personController.scoreController = GameObject.Find ("SpawnLogic").GetComponent<ScoreController>();
+
+
+		personController.SpeedCategory = getRandomSpeedCategory();
 
 		personController.containmentList = listPersons;
 		listPersons.Add (personController);
+	}
+
+	private SpeedCategory getRandomSpeedCategory()
+	{
+		int rand = Random.Range (0, 2);
+		SpeedCategory returnSpeedCategory = SpeedCategory.SLOW;
+		switch (rand) 
+		{
+			case 0:
+			returnSpeedCategory = SpeedCategory.SLOW;	
+			break;
+			case 1:
+			returnSpeedCategory = SpeedCategory.NORMAL;
+			break;
+			case 2:
+			returnSpeedCategory = SpeedCategory.FAST;
+			break;
+		}
+		return returnSpeedCategory;
 	}
 
 	void FixedUpdate () 

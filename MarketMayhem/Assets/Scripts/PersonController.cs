@@ -41,6 +41,10 @@ public List<PersonController> containmentList;
 
 	private float beforeSpeed;
 
+	public ScoreController scoreController;
+
+	public List<AudioSource> listAudioSources = new List<AudioSource> ();
+
 /********************************************
  * 				Getters/Setters 			*
  *******************************************/
@@ -59,24 +63,26 @@ public List<PersonController> containmentList;
 				Attention = 0.0f;
 				hasBeenTappedWhileWatching = false;
 				SpeedCategory = speedCategory;
+				rigidbody.isKinematic = false;
 
 				break;
 			case CharacterState.WATCHING:
 				speed *= 0.5f;
 				headSpriteRenderer.sprite = spriteList[1];
-
 				StartCoroutine(continueWalking());
-
-				Debug.Log("Should change head");
 				break;
 			case CharacterState.INTERACTING:
 				// Change the head
 				Attention = 0.5f;
 				timeSinceInteracting = 0.0f;
 				speed = 0.0f;
-
+				rigidbody.isKinematic = true;
 				break;
 			case CharacterState.PISSED:
+
+				AudioClip audioClip = Resources.Load("PissedStart" + Random.Range(1,3)) as AudioClip;
+				AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+
 				Debug.Log("Pissed 2");
 				speed *= 5.0f;
 				break;
@@ -124,7 +130,7 @@ public List<PersonController> containmentList;
 		{
 			attention = value;
 			GameObject circle = transform.FindChild("Circle").gameObject;
-			circle.transform.localScale = new Vector3(  Mathf.Clamp((1-attention) * 2, 0.0f, 1.0f), Mathf.Clamp((1-attention) * 2, 0.0f, 1.0f), 1 );
+			circle.transform.localScale = new Vector3(  Mathf.Clamp((1-attention) * 2, 0.0f, 2.0f), Mathf.Clamp((1-attention) * 2, 0.0f, 2.0f), 1 );
 
 			SpriteRenderer spriteRendererCircle = circle.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
@@ -179,19 +185,23 @@ public List<PersonController> containmentList;
 		{
 			interactionEndFailure();	
 		}
-
-		Debug.Log (timeSinceInteracting);
 	}
 
 	void interactionEndSuccess()
 	{
 		Debug.Log ("Success");
+		AudioClip audioClip = Resources.Load("InteractionSuccess") as AudioClip;
+		AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+
+		scoreController.Score += speedCategory;
 		State = CharacterState.WALKING;
+
 	}
 
 	void interactionEndFailure()
 	{
 		Debug.Log("Failure");
+		// TODO some animations
 		State = CharacterState.WALKING;
 
 	}
@@ -210,8 +220,16 @@ public List<PersonController> containmentList;
 		case CharacterState.WATCHING:
 			hasBeenTappedWhileWatching = true;
 			State = CharacterState.INTERACTING;
+
+			AudioClip audioClip1 = Resources.Load("InteractionStart1") as AudioClip;
+			AudioSource.PlayClipAtPoint(audioClip1, Vector3.zero);
+
 			break;
 		case CharacterState.INTERACTING:
+
+			AudioClip audioClip2 = Resources.Load("InteractionTap") as AudioClip;
+			AudioSource.PlayClipAtPoint(audioClip2, Vector3.zero);
+
 			Attention += (float)speedCategory / 200;
 			break;
 		}

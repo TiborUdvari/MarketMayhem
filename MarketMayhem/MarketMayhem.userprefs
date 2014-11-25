@@ -1,9 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/SpawnLogic.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/PersonController.cs">
     <Files>
-      <File FileName="Assets/Scripts/TouchInput.cs" Line="32" Column="27" />
-      <File FileName="Assets/Scripts/SpawnLogic.cs" Line="12" Column="27" />
+      <File FileName="Assets/Scripts/TouchInput.cs" Line="73" Column="44" />
+      <File FileName="Assets/Scripts/SpawnLogic.cs" Line="64" Column="57" />
+      <File FileName="Assets/Scripts/PersonController.cs" Line="21" Column="11" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

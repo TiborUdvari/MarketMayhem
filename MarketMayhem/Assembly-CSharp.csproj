@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\PersonController.cs" />
      <Compile Include="Assets\Scripts\SceneManager.cs" />
+     <Compile Include="Assets\Scripts\ScoreController.cs" />
      <Compile Include="Assets\Scripts\SpawnLogic.cs" />
      <Compile Include="Assets\Scripts\StartGameButton.cs" />
      <Compile Include="Assets\Scripts\TouchInput.cs" />
