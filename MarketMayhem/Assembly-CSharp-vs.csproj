@@ -46,11 +46,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\PersonController.cs" />
      <Compile Include="Assets\Scripts\SceneManager.cs" />
      <Compile Include="Assets\Scripts\SpawnLogic.cs" />
      <Compile Include="Assets\Scripts\StartGameButton.cs" />
      <Compile Include="Assets\Scripts\TouchInput.cs" />
-     <None Include="Assets\zombie-art-pack-free-v1\license.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
