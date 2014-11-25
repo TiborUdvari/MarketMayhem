@@ -26,6 +26,13 @@ public class PersonController : MonoBehaviour {
 /********************************************
  * 				Attributes					*
  *******************************************/
+
+	public Sprite headSprite;
+	public Sprite headTurnedSprite;
+	public Sprite bodySprite;
+	public Sprite legSprite;
+	public Sprite armSprite;
+
 public List<PersonController> containmentList;
 	public List<Sprite> spriteList = new List<Sprite>();
 	public float speed;
