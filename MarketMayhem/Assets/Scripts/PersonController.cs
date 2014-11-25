@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/********************************************
+ * 					Enums					*
+ *******************************************/
+
 public enum CharacterState
 {
 	WALKING,
@@ -19,11 +23,28 @@ public enum SpeedCategory
 
 public class PersonController : MonoBehaviour {
 
+/********************************************
+ * 				Attributes					*
+ *******************************************/
+public List<PersonController> containmentList;
+	public List<Sprite> spriteList = new List<Sprite>();
+	public float speed;
+	private bool hasBeenTappedWhileWatching = false;
 
+	// Has getter / setter
+	public float direction;
+	public CharacterState state;
+	private SpeedCategory speedCategory;
+	private float attention;
+	private float timeSinceInteracting;
+	private float timeAllowedToInteract = 3.0f;
 
-	public List<PersonController> containmentList;
-	// Attributes 
-	public CharacterState state; // TODO setter{
+	private float beforeSpeed;
+
+/********************************************
+ * 				Getters/Setters 			*
+ *******************************************/
+
 	public CharacterState State
 	{
 		get {return state;}
@@ -35,10 +56,13 @@ public class PersonController : MonoBehaviour {
 			{
 			case CharacterState.WALKING:
 				headSpriteRenderer.sprite = spriteList[0];
+				Attention = 0.0f;
+				hasBeenTappedWhileWatching = false;
+				SpeedCategory = speedCategory;
+
 				break;
 			case CharacterState.WATCHING:
 				speed *= 0.5f;
-				//TODO add the head
 				headSpriteRenderer.sprite = spriteList[1];
 
 				StartCoroutine(continueWalking());
@@ -47,22 +71,19 @@ public class PersonController : MonoBehaviour {
 				break;
 			case CharacterState.INTERACTING:
 				// Change the head
+				Attention = 0.5f;
+				timeSinceInteracting = 0.0f;
+				speed = 0.0f;
+
 				break;
 			case CharacterState.PISSED:
 				Debug.Log("Pissed 2");
 				speed *= 5.0f;
 				break;
-
 			}
-
 		}
 	}
-
-	public List<Sprite> spriteList = new List<Sprite>();
-
-	public float speed;
-	public float direction;
-
+	
 	public float Direction
 	{
 		get { return direction; }
@@ -74,7 +95,6 @@ public class PersonController : MonoBehaviour {
 		}
 	}
 
-	private SpeedCategory speedCategory;
 	public SpeedCategory SpeedCategory
 	{
 		get { return speedCategory; }
@@ -97,90 +117,109 @@ public class PersonController : MonoBehaviour {
 		}
 	}
 
-	private float attention;
 	public float Attention
 	{
 		get {return attention;}
 		set 
 		{
 			attention = value;
-			SpriteRenderer spriteRendererCircle = transform.FindChild("Circle").GetComponent<SpriteRenderer>() as SpriteRenderer;
+			GameObject circle = transform.FindChild("Circle").gameObject;
+			circle.transform.localScale = new Vector3(  Mathf.Clamp((1-attention) * 2, 0.0f, 1.0f), Mathf.Clamp((1-attention) * 2, 0.0f, 1.0f), 1 );
+
+			SpriteRenderer spriteRendererCircle = circle.GetComponent<SpriteRenderer>() as SpriteRenderer;
+
 			spriteRendererCircle.color = new Color (1f, 1f, 1f, attention);
+
+			SpriteRenderer headSpriteRendered = transform.FindChild("Head").GetComponent<SpriteRenderer>() as SpriteRenderer;
+
+			float green = 1.0f;
+			float blue = 1.0f;
+
+			if (attention >= 0.6)
+			{
+				green -= attention;
+				blue -= attention;
+			}
+			headSpriteRendered.color = new Color(1f, green * 2.5f, blue * 2.5f, 1f);
 		}
 	}
+		
+/********************************************
+ * 				Start/Update				*
+ *******************************************/
 
-	private bool hasBeenTappedWhileWatching = false;
-
-	// Use this for initialization
 	void Start () 
 	{
 		Attention = 0.0f;
 		State = CharacterState.WALKING;
-		//SpriteRenderer.color = new Color (1f, 1f, 1f, 0.2f);
-		//speed = 1.0f + ((float)Random.Range (0, 10)) / 10;
 	}
 	
-	// Update is called once per frame
 	void Update () 
 	{
 		rigidbody.MovePosition (new Vector3 ( rigidbody.transform.position.x + speed * direction * Time.deltaTime  , rigidbody.transform.position.y, 0.0f));
 		HandleCleanup ();
-	
+
+		if (state == CharacterState.INTERACTING) 
+		{
+			InteractionUpdate();
+		}
 	}
 
-	void HandleCleanup()
+	void InteractionUpdate()
 	{
-		float padding = (Camera.main.WorldToScreenPoint( new Vector3(GetComponentInChildren<SpriteRenderer>().bounds.size.x, 0.0f, 0.0f))).x;
+		timeSinceInteracting += Time.deltaTime;
 
-		Vector3 exitPosition;
-		if (direction > 0) 
+		if (timeSinceInteracting > timeAllowedToInteract) 
 		{
-			exitPosition = Camera.main.WorldToScreenPoint ( new Vector3(rigidbody.transform.position.x, 0.0f, 0.0f));
-
-			if (exitPosition.x >= Screen.width + padding) 
-			{
-				containmentList.Remove(this);
-				Destroy (gameObject);
-			}	
-		} 
-		else 
-		{
-			exitPosition = Camera.main.WorldToScreenPoint ( new Vector3(rigidbody.transform.position.x, 0.0f, 0.0f));
-
-			if (exitPosition.x <= -padding )
-			{
-				containmentList.Remove(this);
-				Destroy(gameObject);
-
-			}
+			interactionEndSuccess();
 		}
 
+		Attention -= (float)speedCategory / 75 * Time.deltaTime;
+		if (Attention <= 0.01f || Attention >= 0.99f) 
+		{
+			interactionEndFailure();	
+		}
+
+		Debug.Log (timeSinceInteracting);
+	}
+
+	void interactionEndSuccess()
+	{
+		Debug.Log ("Success");
+		State = CharacterState.WALKING;
+	}
+
+	void interactionEndFailure()
+	{
+		Debug.Log("Failure");
+		State = CharacterState.WALKING;
 
 	}
+/********************************************
+ * 				Touch handling				*
+ *******************************************/
 
 	void OnTouchDown()
 	{
 		Debug.Log("ontouchdown");
-
 		switch (state) 
 		{
 		case CharacterState.WALKING:
 			State = CharacterState.PISSED;
 			break;
 		case CharacterState.WATCHING:
-			state = CharacterState.INTERACTING;
+			hasBeenTappedWhileWatching = true;
+			State = CharacterState.INTERACTING;
 			break;
 		case CharacterState.INTERACTING:
-
+			Attention += (float)speedCategory / 200;
 			break;
 		}
-
-		/*if (CharacterState.WALKING)
-		{
-			state = CharacterState.PISSED;
-		}*/
-
 	}
+
+/********************************************
+ * 				Coroutines					*
+ *******************************************/
 
 	IEnumerator continueWalking()
 	{
@@ -192,11 +231,47 @@ public class PersonController : MonoBehaviour {
 
 	}
 
+/********************************************
+ * 				Public methods				*
+ *******************************************/
+
 	public void watch()
 	{
 		if (state == CharacterState.WALKING) 
 		{
 			State = CharacterState.WATCHING;
+		}
+	}
+
+/********************************************
+ * 				Cleanup						*
+ *******************************************/
+
+	void HandleCleanup()
+	{
+		float padding = (Camera.main.WorldToScreenPoint( new Vector3(GetComponentInChildren<SpriteRenderer>().bounds.size.x, 0.0f, 0.0f))).x;
+		
+		Vector3 exitPosition;
+		if (direction > 0) 
+		{
+			exitPosition = Camera.main.WorldToScreenPoint ( new Vector3(rigidbody.transform.position.x, 0.0f, 0.0f));
+			
+			if (exitPosition.x >= Screen.width + padding) 
+			{
+				containmentList.Remove(this);
+				Destroy (gameObject);
+			}	
+		} 
+		else 
+		{
+			exitPosition = Camera.main.WorldToScreenPoint ( new Vector3(rigidbody.transform.position.x, 0.0f, 0.0f));
+			
+			if (exitPosition.x <= -padding )
+			{
+				containmentList.Remove(this);
+				Destroy(gameObject);
+				
+			}
 		}
 	}
 }
