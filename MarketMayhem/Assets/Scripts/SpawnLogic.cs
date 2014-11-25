@@ -7,7 +7,6 @@ public class SpawnLogic : MonoBehaviour {
 
 	private Vector3 spawnPoint;
 	public GameObject person;
-	//public List<GameObject> personList;
 	private GameObject personClone;
 
 	private int rowNumber = 4;
@@ -19,15 +18,13 @@ public class SpawnLogic : MonoBehaviour {
 	private Timer timer;
 
 
-	// --- Hacks --- 
-	int timerHack;
-	
+	private List<PersonController> listPersons = new List<PersonController>();
+
 	void Start () 
 	{
 		PopulateSpawnPosition ();
-		//timer = new System.Threading.Timer(obj => { SpawnPerson(); }, null, 1000, System.Threading.Timeout.Infinite);
-		//StartCoroutine (SpawnPerson());
 		StartCoroutine (spawn());
+		StartCoroutine (watchingCoroutine ());
 	}
 
 
@@ -53,6 +50,9 @@ public class SpawnLogic : MonoBehaviour {
 		PersonController personController = personClone.GetComponent<PersonController>();
 		personController.Direction = side ? 1.0f : -1.0f;
 		personController.SpeedCategory = SpeedCategory.FAST;
+
+		personController.containmentList = listPersons;
+		listPersons.Add (personController);
 	}
 
 	void FixedUpdate () 
@@ -69,8 +69,40 @@ public class SpawnLogic : MonoBehaviour {
 			float yPos = bottomPadding + i * step + step/2;
 			ySpawnPosList.Add(yPos);
 			spawnPoint = Camera.main.ScreenToWorldPoint (new Vector3(Screen.width * 0.5f, yPos, 10));
-			Debug.Log("Position y " + yPos);
+
 
 		}
 	}
+
+
+	// --- Watching logic --- 
+
+
+	IEnumerator watchingCoroutine()
+	{
+		while (true) {
+			yield return new WaitForSeconds (1.5f);
+			handleWatching();
+		}
+	}
+
+	void handleWatching()
+	{
+		int watchingCount = 0;
+		for (int i=0; i<listPersons.Count; i++) 
+		{
+			PersonController pC = listPersons[i];
+			if (pC.state == CharacterState.WATCHING) watchingCount++; 
+		}
+
+		if (watchingCount < 4) 
+		{
+			int randomPersonIndex = Random.Range(0, listPersons.Count);
+			PersonController pC = listPersons[randomPersonIndex];
+			pC.watch();
+			Debug.Log("Watching");
+		}
+	}
+
+
 }

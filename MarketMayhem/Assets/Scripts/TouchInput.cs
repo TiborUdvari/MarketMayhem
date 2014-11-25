@@ -16,7 +16,7 @@ public class TouchInput : MonoBehaviour {
 #if UNITY_EDITOR
 
 		if (Input.GetMouseButton(0) || Input.GetMouseButtonDown(0) || Input.GetMouseButtonUp(0)) {
-			Debug.Log (Input.touchCount);
+//			Debug.Log (Input.touchCount);
 			
 			touchesOld = new GameObject[touchList.Count];
 			touchList.CopyTo(touchesOld);
@@ -50,7 +50,7 @@ public class TouchInput : MonoBehaviour {
 #endif
 
 		if (Input.touchCount > 0) {
-			Debug.Log (Input.touchCount);
+//			Debug.Log (Input.touchCount);
 
 			touchesOld = new GameObject[touchList.Count];
 			touchList.CopyTo(touchesOld);
