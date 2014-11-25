@@ -100,7 +100,6 @@ public class SpawnLogic : MonoBehaviour {
 			int randomPersonIndex = Random.Range(0, listPersons.Count);
 			PersonController pC = listPersons[randomPersonIndex];
 			pC.watch();
-			Debug.Log("Watching");
 		}
 	}
 

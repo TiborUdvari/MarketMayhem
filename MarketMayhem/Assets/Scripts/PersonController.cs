@@ -48,6 +48,10 @@ public class PersonController : MonoBehaviour {
 			case CharacterState.INTERACTING:
 				// Change the head
 				break;
+			case CharacterState.PISSED:
+				Debug.Log("Pissed 2");
+				speed *= 5.0f;
+				break;
 
 			}
 
@@ -100,8 +104,8 @@ public class PersonController : MonoBehaviour {
 		set 
 		{
 			attention = value;
-			SpriteRenderer spriteRenderer = transform.FindChild("Circle").GetComponent<SpriteRenderer>() as SpriteRenderer;
-			spriteRenderer.color = new Color (1f, 1f, 1f, attention);
+			SpriteRenderer spriteRendererCircle = transform.FindChild("Circle").GetComponent<SpriteRenderer>() as SpriteRenderer;
+			spriteRendererCircle.color = new Color (1f, 1f, 1f, attention);
 		}
 	}
 
@@ -161,13 +165,13 @@ public class PersonController : MonoBehaviour {
 		switch (state) 
 		{
 		case CharacterState.WALKING:
-			state = CharacterState.PISSED;
+			State = CharacterState.PISSED;
 			break;
 		case CharacterState.WATCHING:
 			state = CharacterState.INTERACTING;
 			break;
 		case CharacterState.INTERACTING:
-			//TODO
+
 			break;
 		}
 
@@ -175,7 +179,6 @@ public class PersonController : MonoBehaviour {
 		{
 			state = CharacterState.PISSED;
 		}*/
-
 
 	}
 

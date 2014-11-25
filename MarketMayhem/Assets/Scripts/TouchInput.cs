@@ -31,20 +31,20 @@ public class TouchInput : MonoBehaviour {
 				if (Input.GetMouseButtonDown(0)) {
 					recipient.SendMessage("OnTouchDown", hit.point, SendMessageOptions.DontRequireReceiver);
 				}
-				if (Input.GetMouseButtonUp(0)) {
+				/*if (Input.GetMouseButtonUp(0)) {
 					recipient.SendMessage("OnTouchEnded", hit.point, SendMessageOptions.DontRequireReceiver);
 				}
 				if (Input.GetMouseButton(0)) {
 					recipient.SendMessage("OnTouchStay", hit.point, SendMessageOptions.DontRequireReceiver);
-				}
+				}*/
 			}
 
-			
+			/*
 			foreach (GameObject g in touchesOld) {
 				if (!touchList.Contains(g)) {
 					g.SendMessage("OnTouchExit", hit.point, SendMessageOptions.DontRequireReceiver);
 				}
-			} 
+			} */
 		}
 
 #endif
