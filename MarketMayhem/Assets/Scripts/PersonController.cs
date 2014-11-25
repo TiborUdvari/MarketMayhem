@@ -146,7 +146,6 @@ public class PersonController : MonoBehaviour {
 			circle.transform.localScale = new Vector3(  Mathf.Clamp((1-attention) * 2, 0.0f, 2.0f), Mathf.Clamp((1-attention) * 2, 0.0f, 2.0f), 1 );
 
 			SpriteRenderer spriteRendererCircle = circle.GetComponent<SpriteRenderer>() as SpriteRenderer;
-
 			spriteRendererCircle.color = new Color (1f, 1f, 1f, attention);
 
 			SpriteRenderer headSpriteRendered = transform.FindChild("head").GetComponent<SpriteRenderer>() as SpriteRenderer;
@@ -219,6 +218,19 @@ public class PersonController : MonoBehaviour {
 		{
 			interactionEndFailure();	
 		}
+
+		SpriteRenderer sr = transform.FindChild ("Circle").GetComponent<SpriteRenderer> ();
+		if (attention >= 0.40f &&  attention <= 0.60f) 
+		{
+			sr.sprite = Resources.Load<Sprite> ("good");
+		} else if (attention >= 0.0f && attention <= 0.40f) 
+		{
+			sr.sprite = Resources.Load<Sprite> ("loose");
+		} else if (attention > 0.60f && attention <= 1.0f) 
+		{
+			sr.sprite = Resources.Load<Sprite> ("bad");
+		}
+
 	}
 
 	void interactionEndSuccess()
@@ -267,7 +279,7 @@ public class PersonController : MonoBehaviour {
 			AudioClip audioClip2 = Resources.Load("InteractionTap") as AudioClip;
 			AudioSource.PlayClipAtPoint(audioClip2, Vector3.zero);
 
-			Attention += (float)speedCategory / 200;
+			Attention += (float)speedCategory / 75;
 			break;
 		}
 	}
