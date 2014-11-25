@@ -41,18 +41,18 @@ public class SpawnLogic : MonoBehaviour {
 
 	public void SpawnPerson()
 	{
-		Debug.Log ("Spawn person. ");
-
 		int yPosIndex = Random.Range (0, ySpawnPosList.Count);
 		float yPos = ySpawnPosList[yPosIndex];
 
-		float padding = 0; // TODO get half of sprite size
-		bool side = yPos % 2 == 0;
-
-		float xPos = side ? -padding : -padding;
+		float padding = 21.0f; // TODO get half of sprite size
+		bool side = yPosIndex % 2 == 0;
+		float xPos = side ? -padding : Screen.width + padding;
 
 		Vector3 initPosition =  Camera.main.ScreenToWorldPoint( new Vector3 ( xPos, yPos, 9.0f));
 		personClone = Instantiate (person, initPosition, Quaternion.identity) as GameObject;
+		PersonController personController = personClone.GetComponent<PersonController>();
+		personController.Direction = side ? 1.0f : -1.0f;
+		personController.SpeedCategory = SpeedCategory.FAST;
 	}
 
 	void FixedUpdate () 
@@ -71,6 +71,5 @@ public class SpawnLogic : MonoBehaviour {
 			spawnPoint = Camera.main.ScreenToWorldPoint (new Vector3(Screen.width * 0.5f, yPos, 10));
 
 		}
-		Debug.Log (ySpawnPosList.Count);
 	}
 }
