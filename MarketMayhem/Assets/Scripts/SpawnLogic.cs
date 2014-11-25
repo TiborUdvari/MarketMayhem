@@ -56,8 +56,18 @@ public class SpawnLogic : MonoBehaviour {
 
 		personController.SpeedCategory = getRandomSpeedCategory();
 
+		configurePersonSprites (personController);
+
 		personController.containmentList = listPersons;
 		listPersons.Add (personController);
+	}
+
+
+	private void configurePersonSprites(PersonController personController)
+	{
+		string gender = Random.Range(0,10) % 2 == 0 ? "M" : "F";
+
+
 	}
 
 	private SpeedCategory getRandomSpeedCategory()
