@@ -32,8 +32,7 @@ public class PersonController : MonoBehaviour {
 	public Sprite bodySprite;
 	public Sprite legSprite;
 	public Sprite armSprite;
-
-public List<PersonController> containmentList;
+	public List<PersonController> containmentList;
 	public List<Sprite> spriteList = new List<Sprite>();
 	public float speed;
 	private bool hasBeenTappedWhileWatching = false;
@@ -66,7 +65,8 @@ public List<PersonController> containmentList;
 			switch (state)
 			{
 			case CharacterState.WALKING:
-				headSpriteRenderer.sprite = spriteList[0];
+				headSpriteRenderer.sprite =  headTurnedSprite;
+					
 				Attention = 0.0f;
 				hasBeenTappedWhileWatching = false;
 				SpeedCategory = speedCategory;
@@ -77,7 +77,7 @@ public List<PersonController> containmentList;
 				break;
 			case CharacterState.WATCHING:
 				speed *= 0.5f;
-				headSpriteRenderer.sprite = spriteList[1];
+				headSpriteRenderer.sprite = headSprite;
 				StartCoroutine(continueWalking());
 				break;
 			case CharacterState.INTERACTING:
@@ -172,8 +172,28 @@ public List<PersonController> containmentList;
 		Attention = 0.0f;
 		State = CharacterState.WALKING;
 		animator = this.GetComponent<Animator>();
+
+		SpriteRenderer bodySR = transform.FindChild("body").GetComponent<SpriteRenderer>() as SpriteRenderer;
+		bodySR.sprite = bodySprite;
+
+		SpriteRenderer armFrontSR = transform.FindChild ("body").FindChild ("armFront").GetComponent<SpriteRenderer>() as SpriteRenderer;
+		armFrontSR.sprite = armSprite;
+
+		SpriteRenderer armBackSR = transform.FindChild ("body").FindChild ("armFront").GetComponent<SpriteRenderer>() as SpriteRenderer;
+		armBackSR.sprite = armSprite;
+
+		SpriteRenderer legFrontSR = transform.FindChild ("body").FindChild ("legBack").GetComponent<SpriteRenderer>() as SpriteRenderer;
+		legFrontSR.sprite = legSprite;
+
+		SpriteRenderer legBackSR = transform.FindChild ("body").FindChild ("legFront").GetComponent<SpriteRenderer>() as SpriteRenderer;
+		legBackSR.sprite = legSprite;
 	}
-	
+
+	private void setupCharacter()
+	{
+
+	}
+
 	void Update () 
 	{
 		rigidbody.MovePosition (new Vector3 ( rigidbody.transform.position.x + speed * direction * Time.deltaTime  , rigidbody.transform.position.y, 0.0f));

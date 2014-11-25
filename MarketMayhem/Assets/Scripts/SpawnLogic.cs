@@ -9,7 +9,7 @@ public class SpawnLogic : MonoBehaviour {
 	public GameObject person;
 	private GameObject personClone;
 
-	private int rowNumber = 4;
+	private int rowNumber = 6;
 	private float xPos;
 	private float yPos;
 	private float bottomPadding = 80;
@@ -65,10 +65,47 @@ public class SpawnLogic : MonoBehaviour {
 
 	private void configurePersonSprites(PersonController personController)
 	{
-		string gender = Random.Range(0,10) % 2 == 0 ? "M" : "F";
+		string gender = Random.Range(0,10) % 2 == 0 ? "M" : "W";
 
+		int bodyIndex = gender == "M" ? Random.Range (0, 3) : Random.Range (0, 2);
+		int headIndex = gender == "M" ? Random.Range (0, 3) : Random.Range (0, 3);
+
+		int colorIndex = Random.Range (0, 5);
+		string colorName = "n";
+		switch (colorIndex) 
+		{
+		case 0:
+			colorName = "r";
+			break;
+		case 1: 
+			colorName = "g";
+			break;
+		case 2:
+			colorName = "b";
+			break;
+		case 3:
+			colorName = "n";
+			break;
+		}
+
+		int armIndex = Random.Range(0, 2);
+		int legIndex = Random.Range (0, 7);
+
+		string headSpriteName = headIndex + "_" + gender + "_headF_" + colorName;
+		string headSpriteTurnedName = headIndex + "_" + gender + "_headS_" + colorName;
+		string bodySpriteName = bodyIndex + "_body_" + gender + "_" + colorName;
+		string legSpriteName = "leg_" + legIndex;
+		string armSpriteName = "arm_" + colorName + "_" + armIndex;
+
+		personController.headSprite = Resources.Load<Sprite>(headSpriteName);
+		personController.headTurnedSprite = Resources.Load<Sprite> (headSpriteTurnedName);
+		personController.bodySprite = Resources.Load<Sprite> (bodySpriteName);
+		personController.legSprite = Resources.Load<Sprite> (legSpriteName);
+		personController.armSprite = Resources.Load<Sprite> (armSpriteName);
 
 	}
+
+
 
 	private SpeedCategory getRandomSpeedCategory()
 	{
