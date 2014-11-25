@@ -50,20 +50,20 @@ public class SpawnLogic : MonoBehaviour {
 		PersonController personController = personClone.GetComponent<PersonController>();
 		personController.Direction = side ? 1.0f : -1.0f;
 
-
 		personController.scoreController = GameObject.Find ("SpawnLogic").GetComponent<ScoreController>();
 
 
 		personController.SpeedCategory = getRandomSpeedCategory();
 
-		configurePersonSprites (personController);
+
+		configurePersonSprites (personController, personController.SpeedCategory);
 
 		personController.containmentList = listPersons;
 		listPersons.Add (personController);
 	}
 
 
-	private void configurePersonSprites(PersonController personController)
+	private void configurePersonSprites(PersonController personController, SpeedCategory speedCategory)
 	{
 		string gender = Random.Range(0,10) % 2 == 0 ? "M" : "W";
 
@@ -88,6 +88,19 @@ public class SpawnLogic : MonoBehaviour {
 			break;
 		}
 
+		switch (speedCategory) 
+		{
+		case SpeedCategory.SLOW:
+			colorName = "g";
+			break;
+		case SpeedCategory.NORMAL:
+			colorName = Random.Range(0,2) == 1 ? "n" : "b";
+			break;
+		case SpeedCategory.FAST:
+			colorName = "r";
+			break;
+		}
+
 		int armIndex = Random.Range(0, 2);
 		int legIndex = Random.Range (0, 7);
 
@@ -104,12 +117,10 @@ public class SpawnLogic : MonoBehaviour {
 		personController.armSprite = Resources.Load<Sprite> (armSpriteName);
 
 	}
-
-
-
+	
 	private SpeedCategory getRandomSpeedCategory()
 	{
-		int rand = Random.Range (0, 2);
+		int rand = Random.Range (0, 3);
 		SpeedCategory returnSpeedCategory = SpeedCategory.SLOW;
 		switch (rand) 
 		{
@@ -140,8 +151,6 @@ public class SpawnLogic : MonoBehaviour {
 			float yPos = bottomPadding + i * step + step/2;
 			ySpawnPosList.Add(yPos);
 			spawnPoint = Camera.main.ScreenToWorldPoint (new Vector3(Screen.width * 0.5f, yPos, 10));
-
-
 		}
 	}
 
