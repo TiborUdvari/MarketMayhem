@@ -13,7 +13,7 @@ public class SpawnLogic : MonoBehaviour {
 	private int rowNumber = 4;
 	private float xPos;
 	private float yPos;
-	private float bottomPadding = 20;
+	private float bottomPadding = 80;
 	private float topPadding = 20;
 	public List<float> ySpawnPosList = new List<float>();
 	private Timer timer;
@@ -44,7 +44,7 @@ public class SpawnLogic : MonoBehaviour {
 		int yPosIndex = Random.Range (0, ySpawnPosList.Count);
 		float yPos = ySpawnPosList[yPosIndex];
 
-		float padding = 21.0f; // TODO get half of sprite size
+		float padding = 60.0f; // TODO get half of sprite size
 		bool side = yPosIndex % 2 == 0;
 		float xPos = side ? -padding : Screen.width + padding;
 
@@ -69,6 +69,7 @@ public class SpawnLogic : MonoBehaviour {
 			float yPos = bottomPadding + i * step + step/2;
 			ySpawnPosList.Add(yPos);
 			spawnPoint = Camera.main.ScreenToWorldPoint (new Vector3(Screen.width * 0.5f, yPos, 10));
+			Debug.Log("Position y " + yPos);
 
 		}
 	}

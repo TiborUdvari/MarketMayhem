@@ -74,9 +74,11 @@ public class PersonController : MonoBehaviour {
 
 	void HandleCleanup()
 	{
-		float padding = 21.0f;
-		Vector3 exitPosition;
+		float padding = (Camera.main.WorldToScreenPoint( new Vector3(GetComponentInChildren<SpriteRenderer>().bounds.size.x, 0.0f, 0.0f))).x;
 
+		Debug.Log ("Padding" + padding);
+
+		Vector3 exitPosition;
 		if (direction > 0) 
 		{
 			exitPosition = Camera.main.WorldToScreenPoint ( new Vector3(rigidbody2D.transform.position.x, 0.0f, 0.0f));
