@@ -42,8 +42,8 @@ public List<PersonController> containmentList;
 	private float beforeSpeed;
 
 	public ScoreController scoreController;
-
-	public List<AudioSource> listAudioSources = new List<AudioSource> ();
+	public Animator animator;
+	
 
 /********************************************
  * 				Getters/Setters 			*
@@ -54,7 +54,7 @@ public List<PersonController> containmentList;
 		get {return state;}
 		set {
 			state = value;
-			SpriteRenderer headSpriteRenderer = transform.FindChild("Head").GetComponent<SpriteRenderer>() as SpriteRenderer;
+			SpriteRenderer headSpriteRenderer = transform.FindChild("head").GetComponent<SpriteRenderer>() as SpriteRenderer;
 
 			switch (state)
 			{
@@ -64,6 +64,8 @@ public List<PersonController> containmentList;
 				hasBeenTappedWhileWatching = false;
 				SpeedCategory = speedCategory;
 				rigidbody.isKinematic = false;
+
+				animator.SetBool("animationWalking", true);
 
 				break;
 			case CharacterState.WATCHING:
@@ -77,8 +79,12 @@ public List<PersonController> containmentList;
 				timeSinceInteracting = 0.0f;
 				speed = 0.0f;
 				rigidbody.isKinematic = true;
+				animator.SetBool("animationInteraction", true);
+
 				break;
 			case CharacterState.PISSED:
+
+				animator.SetBool("animationInteractionPissed", true);
 
 				AudioClip audioClip = Resources.Load("PissedStart" + Random.Range(1,3)) as AudioClip;
 				AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
@@ -136,7 +142,7 @@ public List<PersonController> containmentList;
 
 			spriteRendererCircle.color = new Color (1f, 1f, 1f, attention);
 
-			SpriteRenderer headSpriteRendered = transform.FindChild("Head").GetComponent<SpriteRenderer>() as SpriteRenderer;
+			SpriteRenderer headSpriteRendered = transform.FindChild("head").GetComponent<SpriteRenderer>() as SpriteRenderer;
 
 			float green = 1.0f;
 			float blue = 1.0f;
@@ -158,6 +164,7 @@ public List<PersonController> containmentList;
 	{
 		Attention = 0.0f;
 		State = CharacterState.WALKING;
+		animator = this.GetComponent<Animator>();
 	}
 	
 	void Update () 
@@ -190,6 +197,9 @@ public List<PersonController> containmentList;
 	void interactionEndSuccess()
 	{
 		Debug.Log ("Success");
+
+		animator.SetBool("animationInteractionSuccess", true);
+
 		AudioClip audioClip = Resources.Load("InteractionSuccess") as AudioClip;
 		AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
 
