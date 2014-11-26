@@ -43,7 +43,7 @@ public class PersonController : MonoBehaviour {
 	private SpeedCategory speedCategory;
 	private float attention;
 	private float timeSinceInteracting;
-	private float timeAllowedToInteract = 3.0f;
+	private float timeAllowedToInteract = 1.0f;
 
 	private float beforeSpeed;
 
@@ -93,9 +93,9 @@ public class PersonController : MonoBehaviour {
 
 				animator.SetBool("animationInteractionPissed", true);
 
-				AudioClip audioClip = Resources.Load("PissedStart" + Random.Range(1,3)) as AudioClip;
+				/*AudioClip audioClip = Resources.Load("PissedStart" + Random.Range(1,3)) as AudioClip;
 				AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
-
+*/
 				scoreController.Mistakes++;
 
 				Debug.Log("Pissed 2");

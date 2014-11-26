@@ -12,6 +12,13 @@ public class ScoreController : MonoBehaviour {
 		get { return mistakes;}
 		set {
 			mistakes = value;
+
+			if (mistakes >= 0)
+			{
+				AudioClip audioClip = Resources.Load("tomato") as AudioClip;
+				AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+			}
+
 			for (int i = 0; i < tomatoesList.Count; i++)
 			{
 				GameObject tomato = tomatoesList[i];
@@ -35,9 +42,10 @@ public class ScoreController : MonoBehaviour {
 
 	IEnumerator endGameIn2Seconds()
 	{
-		yield return new WaitForSeconds (2);
+		yield return new WaitForSeconds (1);
 
 		//TODO end game
+
 		Debug.Log("End game");
 		Application.LoadLevel(3);
 	}
