@@ -96,6 +96,8 @@ public class PersonController : MonoBehaviour {
 				AudioClip audioClip = Resources.Load("PissedStart" + Random.Range(1,3)) as AudioClip;
 				AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
 
+				scoreController.Mistakes++;
+
 				Debug.Log("Pissed 2");
 				speed *= 5.0f;
 				break;
@@ -214,7 +216,7 @@ public class PersonController : MonoBehaviour {
 		}
 
 		Attention -= (float)speedCategory / 75 * Time.deltaTime;
-		if (Attention <= 0.01f || Attention >= 0.99f) 
+		if (Attention <= 0.20f || Attention >= 0.80f) 
 		{
 			interactionEndFailure();	
 		}
